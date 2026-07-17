@@ -92,6 +92,36 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    // 🔹 New: Search employees by name
+    public List<EmployeeResponseDTO> searchEmployeesByName(String name) {
+        logger.info("Searching employees by name containing: {}", name);
+        return employeeRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 🔹 New: Search employees by department
+    public List<EmployeeResponseDTO> searchEmployeesByDepartment(String department) {
+        logger.info("Searching employees by department: {}", department);
+        return employeeRepository.findByDepartmentIgnoreCase(department)
+                .stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+    public List<EmployeeResponseDTO> searchEmployeesBySalaryRange(Double min, Double max) {
+        logger.info("Searching employees with salary between {} and {}", min, max);
+        return employeeRepository.findBySalaryBetween(min, max)
+                .stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+    public Long countEmployeesByDepartment(String department) {
+        logger.info("Counting employees in department: {}", department);
+        return employeeRepository.countByDepartmentIgnoreCase(department);
+    }
+
+
     // Helper method to convert entity to DTO
     private EmployeeResponseDTO convertToResponseDTO(Employee employee) {
         EmployeeResponseDTO response = new EmployeeResponseDTO();

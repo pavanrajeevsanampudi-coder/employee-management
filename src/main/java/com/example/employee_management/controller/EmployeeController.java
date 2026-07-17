@@ -96,4 +96,51 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return "Employee deleted successfully!";
     }
+
+    // 🔹 New: Search employees by name
+    @Operation(summary = "Search employees by name", description = "Search employees whose name contains given text. Accessible by ADMIN and USER roles.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Employees fetched successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN or USER role")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/searchByName")
+    public List<EmployeeResponseDTO> searchEmployeesByName(@RequestParam String name) {
+        return employeeService.searchEmployeesByName(name);
+    }
+
+    // 🔹 New: Search employees by department
+    @Operation(summary = "Search employees by department", description = "Search employees by department name. Accessible by ADMIN and USER roles.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Employees fetched successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN or USER role")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/searchByDepartment")
+    public List<EmployeeResponseDTO> searchEmployeesByDepartment(@RequestParam String department) {
+        return employeeService.searchEmployeesByDepartment(department);
+    }
+    @Operation(summary = "Search employees by salary range", description = "Fetch employees whose salary is between min and max. Accessible by ADMIN and USER roles.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Employees fetched successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN or USER role")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/searchBySalaryRange")
+    public List<EmployeeResponseDTO> searchEmployeesBySalaryRange(
+            @RequestParam Double min,
+            @RequestParam Double max) {
+        return employeeService.searchEmployeesBySalaryRange(min, max);
+    }
+    @Operation(summary = "Count employees by department", description = "Returns the number of employees in a given department. Accessible by ADMIN and USER roles.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Count fetched successfully"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN or USER role")
+    })
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/countByDepartment")
+    public Long countEmployeesByDepartment(@RequestParam String department) {
+        return employeeService.countEmployeesByDepartment(department);
+    }
+
 }
